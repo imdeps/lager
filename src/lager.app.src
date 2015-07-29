@@ -46,15 +46,15 @@
             %% Whether to redirect error_logger messages into the default lager_event sink - defaults to true
             {error_logger_redirect, true},
             %% How many messages per second to allow from error_logger before we start dropping them
-            {error_logger_hwm, 50},
+            {error_logger_hwm, 100},
             %% How big the gen_event mailbox can get before it is
             %% switched into sync mode.  This value only applies to
             %% the default sink; extra sinks can supply their own.
-            {async_threshold, 20},
+            {async_threshold, 1024},
             %% Switch back to async mode, when gen_event mailbox size
             %% decrease from `async_threshold' to async_threshold -
             %% async_threshold_window. This value only applies to the
             %% default sink; extra sinks can supply their own.
-            {async_threshold_window, 5}
+            {async_threshold_window, 256}
         ]}
  ]}.

@@ -127,7 +127,12 @@ do_log_impl(Severity, Metadata, Format, Args, SeverityAsInt, LevelThreshold, Tra
                 true ->
                     gen_event:notify(SinkPid, {log, LagerMsg});
                 false ->
-                    gen_event:sync_notify(SinkPid, {log, LagerMsg})
+                    %gen_event:sync_notify(SinkPid, {log, LagerMsg})
+                    %discard message when sync mode, avoid processes all blocked timeout
+                    case application:get_env(lager, sync_discard, true) of
+                        true -> discard;
+                        false -> gen_event:sync_notify(SinkPid, {log, LagerMsg})
+                    end 
             end,
             case TraceSinkPid /= undefined of
                 true ->
