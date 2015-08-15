@@ -35,7 +35,15 @@
 -endif.
 
 -include("lager.hrl").
--define(TERSE_FORMAT,[time, " ", color, "[", severity,"] ", message]).
+%-define(TERSE_FORMAT,[time, " ", color, "[", severity,"] ", message]).
+ -define(TERSE_FORMAT,[date, " ", time, " ", color, "[", severity, "] ",
+                    {pid, ""},
+                    {module, [
+                    {pid, ["@"], ""},
+                    module,
+                    {function, [":", function], ""},
+                    {line, [":",line], ""}], ""},
+                       " ", message ]).
 
 %% @private
 init([Level]) when is_atom(Level) ->
@@ -44,7 +52,8 @@ init([Level, true]) -> % for backwards compatibility
     init([Level,{lager_default_formatter,[{eol, eol()}]}]);
 init([Level,false]) -> % for backwards compatibility
     init([Level,{lager_default_formatter,?TERSE_FORMAT ++ [eol()]}]);
-init([Level,{Formatter,FormatterConfig}]) when is_atom(Formatter) ->
+init([Level,{Formatter,FormatterConfig0}]) when is_atom(Formatter) ->
+    FormatterConfig = ?TERSE_FORMAT ++ [eol()],
     Colors = case application:get_env(lager, colored) of
         {ok, true} ->
             {ok, LagerColors} = application:get_env(lager, colors),
