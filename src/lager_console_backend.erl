@@ -105,7 +105,12 @@ handle_event({log, Message},
     #state{level=L,formatter=Formatter,format_config=FormatConfig,colors=Colors} = State) ->
     case lager_util:is_loggable(Message, L, ?MODULE) of
         true ->
-            io:put_chars(user, Formatter:format(Message,FormatConfig,Colors)),
+            case whereis(user) of
+                Pid when is_pid(Pid) ->
+                    io:put_chars(user, Formatter:format(Message,FormatConfig,Colors));
+                _ ->
+                    ignore
+            end,
             {ok, State};
         false ->
             {ok, State}
