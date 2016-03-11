@@ -43,6 +43,7 @@
                     module,
                     {function, [":", function], ""},
                     {line, [":",line], ""}], ""},
+                     logtag,
                        " ", message ]).
 
 %% @private
@@ -52,7 +53,7 @@ init([Level, true]) -> % for backwards compatibility
     init([Level,{lager_default_formatter,[{eol, eol()}]}]);
 init([Level,false]) -> % for backwards compatibility
     init([Level,{lager_default_formatter,?TERSE_FORMAT ++ [eol()]}]);
-init([Level,{Formatter,FormatterConfig0}]) when is_atom(Formatter) ->
+init([Level,{Formatter,_FormatterConfig0}]) when is_atom(Formatter) ->
     FormatterConfig = ?TERSE_FORMAT ++ [eol()],
     Colors = case application:get_env(lager, colored) of
         {ok, true} ->

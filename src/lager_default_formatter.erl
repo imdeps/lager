@@ -65,6 +65,7 @@ format(Msg,[{eol, EOL}], Colors) ->
                     module,
                     {function, [":", function], ""},
                     {line, [":",line], ""}], ""},
+            logtag,
             " ", message, EOL], Colors);
 format(Message,Config,Colors) ->
     [ case V of
@@ -100,7 +101,7 @@ output({metadata, IntSep, FieldSep}, Msg) ->
     string:join([io_lib:format("~s~s~p", [K, IntSep, V]) || {K, V} <- MD], FieldSep);
 output(Prop,Msg) when is_atom(Prop) ->
     Metadata = lager_msg:metadata(Msg),
-    make_printable(get_metadata(Prop,Metadata,<<"Undefined">>));
+    make_printable(get_metadata(Prop,Metadata,<<"">>));
 output({Prop,Default},Msg) when is_atom(Prop) ->
     Metadata = lager_msg:metadata(Msg),
     make_printable(get_metadata(Prop,Metadata,output(Default,Msg)));
@@ -148,7 +149,7 @@ output({metadata, IntSep, FieldSep}, Msg, _Width) ->
 
 output(Prop, Msg, Width) when is_atom(Prop) ->
     Metadata = lager_msg:metadata(Msg),
-    make_printable(get_metadata(Prop,Metadata,<<"Undefined">>), Width);
+    make_printable(get_metadata(Prop,Metadata,<<"">>), Width);
 output({Prop,Default},Msg, Width) when is_atom(Prop) ->
     Metadata = lager_msg:metadata(Msg),
     make_printable(get_metadata(Prop,Metadata,output(Default,Msg)), Width);
